@@ -2,6 +2,40 @@
 
 **HashTimer** is a specialized tool for analyzing PBKDF2 hash timing distributions with real-time monitoring and statistical analysis. It is designed for security researchers and developers studying hash timing characteristics and potential side-channel patterns.
 
+# Example
+```
+██╗  ██╗ █████╗ ███████╗██╗  ██╗       
+██║  ██║██╔══██╗██╔════╝██║  ██║       
+███████║███████║███████╗███████║       
+██╔══██║██╔══██║╚════██║██╔══██║       
+██║  ██║██║  ██║███████║██║  ██║       
+╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝       
+                                       
+████████╗██╗███╗   ███╗███████╗██████╗ 
+╚══██╔══╝██║████╗ ████║██╔════╝██╔══██╗
+   ██║   ██║██╔████╔██║█████╗  ██████╔╝
+   ██║   ██║██║╚██╔╝██║██╔══╝  ██╔══██╗
+   ██║   ██║██║ ╚═╝ ██║███████╗██║  ██║
+   ╚═╝   ╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝
+                                       
+
+
+============================================================================================================
+Current      Count    Min          25th         50th         75th         95th         99th         Max         
+============================================================================================================
+261.04 μs    52       258.63 μs    698.63 μs    865.38 μs    1354.46 μs   1471.63 μs   1821.84 μs   1825.54 μs  
+1177.58 μs   53       258.63 μs    699.13 μs    866.62 μs    1352.33 μs   1471.38 μs   1819.99 μs   1825.54 μs  
+729.92 μs    54       258.63 μs    699.63 μs    865.38 μs    1350.21 μs   1471.13 μs   1818.13 μs   1825.54 μs  
+980.58 μs    55       258.63 μs    702.09 μs    866.62 μs    1349.09 μs   1470.89 μs   1816.28 μs   1825.54 μs  
+1358.75 μs   56       258.63 μs    704.56 μs    872.19 μs    1354.46 μs   1470.64 μs   1814.43 μs   1825.54 μs  
+4401.21 μs   57       258.63 μs    707.03 μs    877.75 μs    1358.72 μs   1581.49 μs   4220.91 μs   4401.21 μs  
+767.50 μs    58       258.63 μs    709.50 μs    872.19 μs    1358.71 μs   1573.08 μs   4195.16 μs   4401.21 μs  
+806.50 μs    59       258.63 μs    709.86 μs    866.62 μs    1356.58 μs   1564.66 μs   4169.40 μs   4401.21 μs  
+636.87 μs    60       258.63 μs    704.56 μs    865.38 μs    1354.46 μs   1556.25 μs   4143.64 μs   4401.21 μs  
+655.92 μs    61       258.63 μs    699.13 μs    864.13 μs    1352.33 μs   1547.84 μs   4117.89 μs   4401.21 μs  
+887.46 μs    62       258.63 μs    699.63 μs    865.38 μs    1350.21 μs   1539.43 μs   4092.13 μs   4401.21 μs
+```
+
 ## Introduction
 
 HashTimer is a Python-based command-line utility that continuously measures the timing of PBKDF2-HMAC-SHA256 operations. It stores the results and processes them in real time using T-Digest statistics. This tool is ideal for identifying timing variations that may hint at side-channel vulnerabilities or performance anomalies.
