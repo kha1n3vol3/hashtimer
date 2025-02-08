@@ -1,6 +1,6 @@
 # HashTimer
 
-**HashTimer** is a specialized tool for analyzing PBKDF2 hash timing distributions with real-time monitoring and statistical analysis. It is designed for security researchers and developers studying hash timing characteristics and potential side-channel patterns.
+**HashTimer** is a specialized tool for analyzing PBKDF2 hash timing distributions with real-time monitoring and statistical analysis. It is designed for security researchers and developers studying hash timing characteristics and potential side-channel patterns. Data is stored in a [t-digest](https://github.com/tdunning/t-digest)
 
 # Example
 ```
@@ -35,7 +35,7 @@ Current      Count    Min          25th         50th         75th         95th  
 655.92 μs    61       258.63 μs    699.13 μs    864.13 μs    1352.33 μs   1547.84 μs   4117.89 μs   4401.21 μs  
 887.46 μs    62       258.63 μs    699.63 μs    865.38 μs    1350.21 μs   1539.43 μs   4092.13 μs   4401.21 μs
 ```
-![Figure: hashtimer analysys](hashtimer-analysis.png)
+![Figure: hashtimer visual](hashtimer-analysis.png)
 ## Introduction
 
 HashTimer is a Python-based command-line utility that continuously measures the timing of PBKDF2-HMAC-SHA256 operations. It stores the results and processes them in real time using T-Digest statistics. This tool is ideal for identifying timing variations that may hint at side-channel vulnerabilities or performance anomalies.
@@ -165,6 +165,63 @@ data/
 - Timestamped log rotation
 - Clean shutdown preservation
 
+## Visualizing Hash Distributions
+
+### Overview
+
+The **`visualize_hashmeter.py`** script reads T-Digest data from the `hashmeter.json` file and generates a cumulative distribution chart of PBKDF2 hash times. This helps you quickly see how hash times are distributed, locate outliers, and identify percentile thresholds of interest (e.g., 25th, 50th, 75th, 99th).
+
+### How to Run
+
+1. Ensure you have already generated some data using `hashmeter.py`. This will produce `data/hashmeter.json`, which stores T-Digest centroid information.  
+2. Run `visualize_hashmeter.py`:
+   ```bash
+   python visualize_hashmeter.py
+   ```
+   - By default, it uses a **log scale** on the x-axis.  
+   - You can toggle between log-scale and linear-scale in the script by editing the call to `visualize_tdigest(td, log_scale=True)` or `visualize_tdigest(td, log_scale=False)`.
+
+### Components of the Chart
+
+1. **X-Axis: “Time (µs)”**  
+   - Plots the PBKDF2 hash time in microseconds.  
+   - Shown in either logarithmic scale (default) or linear scale, depending on the script configuration.  
+
+2. **Y-Axis: “Cumulative Probability”**  
+   - Uses a probability scale (via `probscale`), so that 0% (bottom) corresponds to the shortest measured times, and 100% (top) to the longest.  
+   - Each point on the line shows the probability that a hash completes in at most that many microseconds.
+
+3. **CDF Curve (blue line)**  
+   - This line is the **Cumulative Distribution Function** (CDF) derived from the T-Digest data.  
+   - The curve rises from the fastest times on the left to the slowest times on the right.  
+   - A steeper slope means a tighter cluster of measurements; a flatter slope indicates more spread in times.
+
+4. **Key Percentile Markers (red dots)**  
+   - The script automatically highlights **0th, 25th, 50th, 75th, 95th, 99th, and 100th** percentiles.  
+   - This makes it easy to see, for instance, where half of your measurements fall (50th) or the top 1% (99th).
+
+5. **Annotations**  
+   - By default, annotations are shown for the **25th, 50th, 75th, and 99th** percentiles.  
+   - Each annotation includes the percentile label and the approximate time in microseconds.
+
+6. **Styling and Layout**  
+   - The chart follows a Tufte-inspired style, with minimal “chartjunk” and subtle grid lines.  
+   - A short title and a caption appear at the top, indicating the purpose of the chart and a brief description (“Cumulative distribution of PBKDF2 hash times. Log scale.”).  
+   - Spines on the top and right are removed for a cleaner look.
+
+### Interpreting the Chart
+
+- **Left to Right**: Shorter hash times on the left, longer hash times on the right.  
+- **Bottom to Top**: Low cumulative probability at the bottom (few measurements at these very fast speeds) to high cumulative probability near the top (nearly all measurements are below that time).  
+- A point on the curve at `(x, y)` can be read as:  
+  > “There’s about an *y* fraction (converted from *y*×100%) of measurements at or below *x* microseconds.”
+
+With this visualization, you can quickly spot:
+
+- **Typical Performance**: Around the 50th percentile (the median).  
+- **Variability**: How rapidly the line rises—if the line is steep, hash times are tightly grouped.  
+- **Outliers**: Look for a “long tail” to the right side of the chart, which might indicate intermittent slow operations.
+- 
 ## Common Issues and Solutions
 
 | Problem                | Solution                                     |
