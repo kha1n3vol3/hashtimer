@@ -35,7 +35,6 @@ Current      Count    Min          25th         50th         75th         95th  
 655.92 μs    61       258.63 μs    699.13 μs    864.13 μs    1352.33 μs   1547.84 μs   4117.89 μs   4401.21 μs  
 887.46 μs    62       258.63 μs    699.63 μs    865.38 μs    1350.21 μs   1539.43 μs   4092.13 μs   4401.21 μs
 ```
-![Figure: hashtimer visual](hashtimer-analysis.png)
 ## Introduction
 
 HashTimer is a Python-based command-line utility that continuously measures the timing of PBKDF2-HMAC-SHA256 operations. It stores the results and processes them in real time using T-Digest statistics. This tool is ideal for identifying timing variations that may hint at side-channel vulnerabilities or performance anomalies.
@@ -166,6 +165,8 @@ data/
 - Clean shutdown preservation
 
 ## Visualizing Hash Distributions
+
+![Figure: hashtimer visual](hashtimer-analysis.png)
 
 ### Overview
 
