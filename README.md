@@ -164,9 +164,9 @@ data/
 - Timestamped log rotation
 - Clean shutdown preservation
 
-## Visualizing Hash Distributions
+## Visualizing Hash Distribution
 
-![Figure: hashtimer visual](hashtimer-analysis.png)
+![Figure: hashtimer visual](hashtimer-analysis-chart.png)
 
 ### Overview
 
