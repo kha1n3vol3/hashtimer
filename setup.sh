@@ -12,8 +12,7 @@ source .venv/bin/activate
 uv pip install --upgrade pip
 
 # Install dependencies
-uv pip install tdigest asyncio uvloop
-uv pip install matplotlib
+uv pip install tdigest asyncio uvloop probscale matplotlib numpy matplotlib
 
 # Deactivate the virtual environment
 deactivate
