@@ -1,7 +1,7 @@
 # HashTimer
 
 **HashTimer** is a specialized tool for analyzing PBKDF2 hash timing distributions with real-time monitoring and statistical analysis. It is designed for security researchers and developers studying hash timing characteristics and potential side-channel patterns. Data is stored in a [t-digest](https://github.com/tdunning/t-digest)
-![Logo](hashtimer.jpg)
+![Logo](hashtimer2.jpg)
 # Example
 ```
 ██╗  ██╗ █████╗ ███████╗██╗  ██╗       
