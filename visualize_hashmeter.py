@@ -1,9 +1,17 @@
 import json
+import argparse
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 from tdigest import TDigest
 import probscale  # Corrected import
+
+DEFAULT_DATA_FILE = 'data/hashmeter.json'
+
+def parse_args(argv=None):
+    parser = argparse.ArgumentParser(description='Visualize hashmeter T-Digest data.')
+    parser.add_argument('-f', '--file', type=str, default=DEFAULT_DATA_FILE, help='Path to the hashmeter data file.')
+    return parser.parse_args(argv)
 
 def import_tdigest(filename: str) -> TDigest:
     """Imports TDigest data from a JSON file (same as before)."""
@@ -99,12 +107,17 @@ def visualize_tdigest(td: TDigest,
     plt.tight_layout(rect=[0, 0, 1, 0.95])
     plt.show()
 
-if __name__ == "__main__":
+def main(argv=None):
+    args = parse_args(argv)
+
     try:
-        td = import_tdigest('./data/hashmeter.json')
+        td = import_tdigest(args.file)
         # visualize_tdigest(td) # Linear
         visualize_tdigest(td, log_scale=True)  # Log scale
     except (FileNotFoundError, ValueError) as e:
         print(f"Error: {e}")
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
+
+if __name__ == "__main__":
+    main()
