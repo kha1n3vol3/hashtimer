@@ -3,3 +3,16 @@
 .dolt/
 *.db
 .beads-credential-key
+
+# Local agent worktrees
+.worktrees/
+
+# Python local environment and caches
+.venv/
+__pycache__/
+*.pyc
+
+# HashTimer generated data and logs
+/data/
+/hashmeter.json
+/timing_values_*.log
