@@ -111,9 +111,13 @@ data/
 ## Dependencies
 
 - Python 3.11+ (recommended)
-- `uvloop`: Enhanced async event loop
+- Third-party packages are listed in `requirements.txt` and installed by `./setup.sh`:
+- `matplotlib`: Hash distribution visualization
+- `numpy`: Visualization data preparation
+- `probscale`: Probability-scale chart axis
 - `tdigest`: Efficient percentile calculation
-- `hashlib`: Cryptographic hash functions
+- `uvloop`: Enhanced async event loop
+- Standard library modules such as `asyncio` and `hashlib` are provided by Python and are not installed from PyPI.
 
 ## Use Cases
 

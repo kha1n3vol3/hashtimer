@@ -144,9 +144,13 @@ data/
 ## Dependencies
 
 - Python 3.11+ (recommended)
-- `uvloop`: Enhanced async event loop
+- Third-party packages are listed in `requirements.txt` and installed by `./setup.sh`:
+- `matplotlib`: Hash distribution visualization
+- `numpy`: Visualization data preparation
+- `probscale`: Probability-scale chart axis
 - `tdigest`: Efficient percentile calculation
-- `hashlib`: Cryptographic hash functions
+- `uvloop`: Enhanced async event loop
+- Standard library modules such as `asyncio` and `hashlib` are provided by Python and are not installed from PyPI.
 
 ## Use Cases
 
@@ -179,7 +183,12 @@ The **`visualize_hashmeter.py`** script reads T-Digest data from the `hashmeter.
    ```bash
    python visualize_hashmeter.py
    ```
+   To visualize another data file, pass `-f` or `--file`:
+   ```bash
+   python visualize_hashmeter.py --file /tmp/hashtimer-data/hashmeter.json
+   ```
    - By default, it uses a **log scale** on the x-axis.  
+   - By default, it reads `data/hashmeter.json`.  
    - You can toggle between log-scale and linear-scale in the script by editing the call to `visualize_tdigest(td, log_scale=True)` or `visualize_tdigest(td, log_scale=False)`.
 
 ### Components of the Chart
