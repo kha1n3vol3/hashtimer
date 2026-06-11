@@ -11,6 +11,7 @@ DEFAULT_DATA_FILE = 'data/hashmeter.json'
 def parse_args(argv=None):
     parser = argparse.ArgumentParser(description='Visualize hashmeter T-Digest data.')
     parser.add_argument('-f', '--file', type=str, default=DEFAULT_DATA_FILE, help='Path to the hashmeter data file.')
+    parser.add_argument('-o', '--output', type=str, help='Write the chart to an image file instead of opening a window.')
     return parser.parse_args(argv)
 
 def import_tdigest(filename: str) -> TDigest:
@@ -34,7 +35,8 @@ def import_tdigest(filename: str) -> TDigest:
 def visualize_tdigest(td: TDigest,
                       xlabel: str = "Time (μs)",
                       ylabel: str = "Cumulative Probability",
-                      log_scale: bool = False):
+                      log_scale: bool = False,
+                      output_file: str | None = None):
     """
     Visualizes the TDigest data with a Tufte-inspired style.
     """
@@ -105,7 +107,10 @@ def visualize_tdigest(td: TDigest,
 
     # --- Final Adjustments ---
     plt.tight_layout(rect=[0, 0, 1, 0.95])
-    plt.show()
+    if output_file:
+        plt.savefig(output_file)
+    else:
+        plt.show()
 
 def main(argv=None):
     args = parse_args(argv)
@@ -113,7 +118,7 @@ def main(argv=None):
     try:
         td = import_tdigest(args.file)
         # visualize_tdigest(td) # Linear
-        visualize_tdigest(td, log_scale=True)  # Log scale
+        visualize_tdigest(td, log_scale=True, output_file=args.output)  # Log scale
     except (FileNotFoundError, ValueError) as e:
         print(f"Error: {e}")
     except Exception as e:

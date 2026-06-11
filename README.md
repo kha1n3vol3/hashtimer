@@ -187,8 +187,13 @@ The **`visualize_hashmeter.py`** script reads T-Digest data from the `hashmeter.
    ```bash
    python visualize_hashmeter.py --file /tmp/hashtimer-data/hashmeter.json
    ```
+   To regenerate the tracked README chart image, write the chart with `-o` or `--output`:
+   ```bash
+   python visualize_hashmeter.py --file data/hashmeter.json --output hashtimer-analysis-chart.png
+   ```
    - By default, it uses a **log scale** on the x-axis.  
    - By default, it reads `data/hashmeter.json`.  
+   - Without `--output`, it opens an interactive matplotlib window.
    - You can toggle between log-scale and linear-scale in the script by editing the call to `visualize_tdigest(td, log_scale=True)` or `visualize_tdigest(td, log_scale=False)`.
 
 ### Components of the Chart

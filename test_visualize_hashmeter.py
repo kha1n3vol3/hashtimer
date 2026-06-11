@@ -23,7 +23,25 @@ class VisualizeHashmeterCliTest(unittest.TestCase):
                 visualize_hashmeter.main(["-f", "/tmp/run/hashmeter.json"])
 
         import_tdigest.assert_called_once_with("/tmp/run/hashmeter.json")
-        visualize_tdigest.assert_called_once_with(tdigest, log_scale=True)
+        visualize_tdigest.assert_called_once_with(tdigest, log_scale=True, output_file=None)
+
+    def test_main_saves_selected_output_file(self):
+        tdigest = object()
+
+        with mock.patch.object(visualize_hashmeter, "import_tdigest", return_value=tdigest):
+            with mock.patch.object(visualize_hashmeter, "visualize_tdigest") as visualize_tdigest:
+                visualize_hashmeter.main([
+                    "--file",
+                    "/tmp/run/hashmeter.json",
+                    "--output",
+                    "hashtimer-analysis-chart.png",
+                ])
+
+        visualize_tdigest.assert_called_once_with(
+            tdigest,
+            log_scale=True,
+            output_file="hashtimer-analysis-chart.png",
+        )
 
 
 if __name__ == "__main__":
