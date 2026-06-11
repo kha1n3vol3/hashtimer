@@ -63,6 +63,11 @@ class HashMeter:
             print(f"Error loading TDigest: {e}")
         return TDigest()
 
+    def _persist_tdigest(self) -> None:
+        self.td.compress()
+        with open(self.tdigest_file, 'w') as f:
+            json.dump({'centroids': self.td.centroids_to_list()}, f)
+
     async def measure(self) -> Tuple[bytes, float]:
         start = time.monotonic()
         hashed = hashlib.pbkdf2_hmac('sha256', 
@@ -82,37 +87,38 @@ class HashMeter:
         print(header)
         print("="*108)
 
-        while self.running:
-            try:
-                _, timing = await self.measure()
-                self.td.update(timing)
+        try:
+            while self.running:
+                try:
+                    _, timing = await self.measure()
+                    self.td.update(timing)
 
-                percentiles = [self.td.percentile(p) for p in [25, 50, 75, 95, 99]]
-                
-                stats = "{:<12} {:<8} {:<12} {:<12} {:<12} {:<12} {:<12} {:<12} {:<12}".format(
-                    f"{timing:.2f} μs",
-                    int(self.td.n),
-                    f"{self.td.percentile(0):.2f} μs",
-                    *[f"{p:.2f} μs" for p in percentiles],
-                    f"{self.td.percentile(100):.2f} μs"
-                )
-                print(stats, flush=True)
+                    percentiles = [self.td.percentile(p) for p in [25, 50, 75, 95, 99]]
+                    
+                    stats = "{:<12} {:<8} {:<12} {:<12} {:<12} {:<12} {:<12} {:<12} {:<12}".format(
+                        f"{timing:.2f} μs",
+                        int(self.td.n),
+                        f"{self.td.percentile(0):.2f} μs",
+                        *[f"{p:.2f} μs" for p in percentiles],
+                        f"{self.td.percentile(100):.2f} μs"
+                    )
+                    print(stats, flush=True)
 
-                with open(self.log_file, 'a') as f:
-                    f.write(f"{datetime.now().isoformat()},{timing:.2f}\n")
-                
-                if self.td.n % 1000 == 0:
-                    self.td.compress()
-                    print("[*] Compressed TDigest data")
-                    self.td.compress()
-                    with open(self.tdigest_file, 'w') as f:
-                        json.dump({'centroids': self.td.centroids_to_list()}, f)
+                    with open(self.log_file, 'a') as f:
+                        f.write(f"{datetime.now().isoformat()},{timing:.2f}\n")
+                    
+                    if self.td.n % 1000 == 0:
+                        print("[*] Compressed TDigest data")
+                        self._persist_tdigest()
 
-                await asyncio.sleep(self.config['interval'])
-                
-            except Exception as e:
-                print(f"Error: {e}")
-                self.running = False
+                    await asyncio.sleep(self.config['interval'])
+                    
+                except Exception as e:
+                    print(f"Error: {e}")
+                    self.running = False
+        finally:
+            if self.td.n > 0:
+                self._persist_tdigest()
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description='Monitor PBKDF2 hash timing distributions')
