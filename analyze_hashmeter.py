@@ -33,7 +33,7 @@ Usage:
 - Use the '--help' flag to display this help message.
 """)
 
-def analyze_hashmeter_data(filename: str = 'data/hashmeter.json') -> Dict[str, float]:
+def analyze_hashmeter_data(filename: str = 'data/hashmeter.json') -> Dict[str, float | int | None]:
     """Analyzes hashmeter data and returns key statistics."""
     with open(filename, 'r') as file:
         data = json.load(file)
@@ -56,8 +56,12 @@ def analyze_hashmeter_data(filename: str = 'data/hashmeter.json') -> Dict[str, f
     p90 = td.percentile(90)
     p10 = td.percentile(10)
     estimated_std = (p90 - p10) / 2.56
-    stability_ratio = iqr / median_time
-    outlier_ratio = (max_time - td.percentile(99)) / iqr
+    stability_ratio = iqr / median_time if median_time != 0 else None
+    outlier_ratio = (max_time - td.percentile(99)) / iqr if iqr != 0 else None
+    stability_ratio_text = f"{stability_ratio:.3f}" if stability_ratio is not None else "N/A"
+    outlier_ratio_text = f"{outlier_ratio:.3f}" if outlier_ratio is not None else "N/A"
+    timing_consistency = "N/A" if stability_ratio is None else "Stable" if stability_ratio < 0.5 else "Variable"
+    outlier_presence = "N/A" if outlier_ratio is None else "High" if outlier_ratio > 2 else "Normal"
 
     print_banner()
 
@@ -77,11 +81,11 @@ Stability Metrics:
 ------------------
 Timing Range: {timing_range:.2f}μs
 Estimated Std Dev: {estimated_std:.2f}μs
-Stability Ratio (IQR/Median): {stability_ratio:.3f}
-Outlier Impact Ratio: {outlier_ratio:.3f}
+Stability Ratio (IQR/Median): {stability_ratio_text}
+Outlier Impact Ratio: {outlier_ratio_text}
 
-Timing Consistency: {"Stable" if stability_ratio < 0.5 else "Variable"}
-Outlier Presence: {"High" if outlier_ratio > 2 else "Normal"}
+Timing Consistency: {timing_consistency}
+Outlier Presence: {outlier_presence}
 Sample Size Adequacy: {"Good" if total_runs > 1000 else "Need more samples"}
 
 Key Percentiles:
