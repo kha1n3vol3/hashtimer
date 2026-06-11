@@ -1,0 +1,7 @@
+{
+  "database": "dolt",
+  "backend": "dolt",
+  "dolt_mode": "server",
+  "dolt_database": "hashtimer",
+  "project_id": "3bbeb987-ab35-4cb1-8b30-b7d813352d44"
+}
