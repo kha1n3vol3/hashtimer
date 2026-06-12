@@ -4,14 +4,14 @@
 - This is a small Python script repo, not a packaged project: there is no `pyproject.toml`, lockfile, or CI workflow in the repo.
 - Main entrypoint: `hashmeter.py` continuously measures PBKDF2-HMAC-SHA256 timing, updates a `TDigest`, and writes `data/hashmeter.json` plus `data/timing_values_*.log` by default.
 - Analysis entrypoint: `analyze_hashmeter.py` reads `data/hashmeter.json` by default, or another file via `-f/--file`.
-- Visualization entrypoint: `visualize_hashmeter.py` is hard-coded to read `./data/hashmeter.json` and opens an interactive matplotlib chart.
+- Visualization entrypoint: `visualize_hashmeter.py` reads `data/hashmeter.json` by default, accepts `-f/--file`, and can write a chart with `-o/--output`.
 
 ## Setup And Commands
 - Environment setup is via `./setup.sh`; it uses `uv` to install Python 3.11, create `.venv`, and install third-party dependencies from `requirements.txt`.
 - Activate before running scripts: `source .venv/bin/activate`.
 - Run collection without waiting 15 seconds between samples during checks: `python hashmeter.py --interval 1 --data-dir /tmp/hashtimer-data` and stop with Ctrl-C.
 - Run analysis against generated data: `python analyze_hashmeter.py -f /tmp/hashtimer-data/hashmeter.json`.
-- Run focused regression tests with stdlib unittest: `python -m unittest test_analyze_hashmeter test_hashmeter`.
+- Run focused regression tests with stdlib unittest: `python -m unittest test_analyze_hashmeter test_hashmeter test_visualize_hashmeter`.
 - Smoke-check Python syntax when changing scripts: `python -m py_compile hashmeter.py analyze_hashmeter.py visualize_hashmeter.py`.
 
 ## Data And Docs Gotchas
@@ -30,6 +30,11 @@
 - Root scope `/`: this `AGENTS.md` owns all current project paths, including Python scripts, setup/docs, image assets, and repo-local tool configuration.
 - Child DOX Index: none currently; no subdirectory has distinct durable rules that justify a child `AGENTS.md`.
 - Tool/generated directories such as `.beads/`, `.claude/`, `.grepai/`, `.venv/`, and `data/` stay under root guidance unless their workflows diverge.
+
+## Tooling
+- Use Tilth for structural code reading and diffs: `tilth <file>`, `tilth <file> --section 45-89`, `tilth <symbol> --scope . --expand`, and `tilth diff`.
+- Use Tilth MCP tools when available for the same jobs: `tilth_read`, `tilth_search`, `tilth_files`, `tilth_diff`, `tilth_deps`, and `tilth_grok`.
+- In this small repo, Tilth is most useful for reading whole scripts, checking targeted line ranges, symbol searches, and function-level diffs; use normal exact search only when matching a literal string.
 
 <!-- BEGIN BEADS INTEGRATION v:1 profile:minimal hash:ca08a54f -->
 ## Beads Issue Tracker
